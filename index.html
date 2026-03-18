@@ -185,7 +185,7 @@
                                 <div key={venue.id}>
                                     <div className="flex justify-between text-sm font-medium mb-2">
                                         <span>{venue.name}</span>
-                                        <span>{formatEur(venue.totalHT - venue.honorairesHT)} HT <span className="text-gray-400 font-normal">(hors honoraires)</span></span>
+                                        <span>{formatEur(venue.totalHT)} HT</span>
                                     </div>
                                     {/* Stacked Bar Container */}
                                     <div className="h-6 w-full bg-gray-100 rounded-full overflow-hidden flex">
@@ -245,8 +245,7 @@
                                                     {(()=>{
                                                         const venue = venues[0];
                                                         const val = venue.categories[catKey] || 0;
-                                                        const subtotalHT = venue.totalHT - venue.honorairesHT;
-                                                        const percentage = subtotalHT > 0 ? ((val / subtotalHT) * 100).toFixed(1) : 0;
+                                                        const percentage = venue.totalHT > 0 ? ((val / venue.totalHT) * 100).toFixed(1) : 0;
                                                         return (
                                                             <div className={`px-2 py-1 rounded-md text-white text-xs font-bold ${categoryColors[catKey]}`}>
                                                                 {percentage}%
@@ -268,15 +267,7 @@
                                         )
                                     })}
 
-                                    {/* Honoraires Row */}
-                                    <tr className="bg-gray-50 border-t-2 border-gray-200">
-                                        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Honoraires Agence</td>
-                                        {venues.map(venue => (
-                                            <td key={`hon-${venue.id}`} className="px-6 py-4 whitespace-nowrap text-right text-gray-600">
-                                                {formatEur(venue.honorairesHT)}
-                                            </td>
-                                        ))}
-                                    </tr>
+
 
                                     {/* Totals Row HT */}
                                     <tr className="bg-sky-50 border-t border-sky-200">
@@ -301,7 +292,6 @@
 
         const VenueDetailView = ({ venueId }) => {
             const venue = budgetData[venueId];
-            const subtotalHT = venue.totalHT - venue.honorairesHT;
 
             return (
                 <div className="space-y-6 animate-fade-in">
@@ -322,7 +312,7 @@
                         {/* List Breakdown */}
                         <div className="lg:col-span-2 space-y-4">
                             {Object.entries(venue.categories).map(([catKey, catValue]) => {
-                                const percentage = ((catValue / subtotalHT) * 100).toFixed(1);
+                                const percentage = ((catValue / venue.totalHT) * 100).toFixed(1);
                                 return (
                                     <div key={catKey} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col gap-4">
                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -365,16 +355,7 @@
                                 );
                             })}
 
-                            <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                <div>
-                                    <h4 className="font-semibold text-gray-900">Honoraires de gestion</h4>
-                                    <p className="text-sm text-gray-500">Honoraires Weever</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-lg font-bold text-gray-900">{formatEur(venue.honorairesHT)}</p>
-                                    <p className="text-xs text-gray-500">HT</p>
-                                </div>
-                            </div>
+
                         </div>
 
                         {/* Summary Box */}
@@ -382,14 +363,6 @@
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
                                 <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">Récapitulatif Financier</h3>
                                 <div className="space-y-3 text-sm">
-                                    <div className="flex justify-between text-gray-600">
-                                        <span>Sous-total HT</span>
-                                        <span>{formatEur(subtotalHT)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-gray-600">
-                                        <span>Honoraires HT</span>
-                                        <span>{formatEur(venue.honorairesHT)}</span>
-                                    </div>
                                     <div className="border-t border-sky-200 pt-3 flex justify-between font-bold text-sky-600 text-lg">
                                         <span>Total HT</span>
                                         <span>{formatEur(venue.totalHT)}</span>

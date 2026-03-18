@@ -247,10 +247,13 @@
                                                 </td>
                                                 {venues.map(venue => {
                                                     const val = venue.categories[catKey] || 0;
+                                                    const subtotalHT = venue.totalHT - venue.honorairesHT;
+                                                    const percentage = subtotalHT > 0 ? ((val / subtotalHT) * 100).toFixed(1) : 0;
                                                     const isMin = val === minVal && venues.length > 1; // Only highlight if more than 1 venue
                                                     return (
                                                         <td key={`${catKey}-${venue.id}`} className={`px-6 py-4 whitespace-nowrap text-right ${isMin ? 'text-green-600 font-semibold' : 'text-gray-600'}`}>
-                                                            {formatEur(val)}
+                                                            <div>{formatEur(val)}</div>
+                                                            <div className="text-xs text-gray-400 font-normal mt-0.5">{percentage}%</div>
                                                         </td>
                                                     );
                                                 })}

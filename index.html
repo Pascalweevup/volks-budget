@@ -241,19 +241,26 @@
 
                                         return (
                                             <tr key={catKey} className="hover:bg-gray-50 transition-colors">
-                                                <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 flex items-center">
-                                                    <span className={`w-2 h-2 rounded-full mr-2 ${categoryColors[catKey]}`}></span>
+                                                <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 flex items-center gap-3">
+                                                    {(()=>{
+                                                        const venue = venues[0];
+                                                        const val = venue.categories[catKey] || 0;
+                                                        const subtotalHT = venue.totalHT - venue.honorairesHT;
+                                                        const percentage = subtotalHT > 0 ? ((val / subtotalHT) * 100).toFixed(1) : 0;
+                                                        return (
+                                                            <div className={`px-2 py-1 rounded-md text-white text-xs font-bold ${categoryColors[catKey]}`}>
+                                                                {percentage}%
+                                                            </div>
+                                                        );
+                                                    })()}
                                                     {categoryLabels[catKey]}
                                                 </td>
                                                 {venues.map(venue => {
                                                     const val = venue.categories[catKey] || 0;
-                                                    const subtotalHT = venue.totalHT - venue.honorairesHT;
-                                                    const percentage = subtotalHT > 0 ? ((val / subtotalHT) * 100).toFixed(1) : 0;
                                                     const isMin = val === minVal && venues.length > 1; // Only highlight if more than 1 venue
                                                     return (
                                                         <td key={`${catKey}-${venue.id}`} className={`px-6 py-4 whitespace-nowrap text-right ${isMin ? 'text-green-600 font-semibold' : 'text-gray-600'}`}>
-                                                            <div>{formatEur(val)}</div>
-                                                            <div className="text-xs text-gray-400 font-normal mt-0.5">{percentage}%</div>
+                                                            {formatEur(val)}
                                                         </td>
                                                     );
                                                 })}
